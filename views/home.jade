@@ -1,0 +1,47 @@
+extends layout
+
+block content
+	.container
+		.row
+			.col-sm-12
+				#user
+					h1.text-center.login-title Welcome #{user.firstName}. 
+					.signup-wall
+						.row
+							.col-sm-6
+								h3 Username: 
+							.col-sm-6
+								h3 #{user.username}
+						.row
+							.col-sm-6
+								h3 Username: 
+							.col-sm-6
+								h3 #{user.email}				
+						.row
+							.col-sm-6
+								h3 Email: 
+							.col-sm-6
+								h3 #{user.firstName}				
+						.row
+							.col-sm-6
+								h3 First Name: 
+							.col-sm-6
+								h3 #{user.lastName}				
+						.row
+							.col-sm-6
+								h3 Last Name: 
+							.col-sm-6
+								h3 #{user.username}				
+					.signup-wall
+						.row
+							.col-sm-12
+								h2 Welcome to Osiris!
+						.row
+							.col-sm-12
+								h2 Create, Select your project here
+						.row
+							.col-sm-12
+								h2 Go to project
+								h2
+									a(href="/project") Project
+					a(href='/signout', class='text-center new-account') Sign Out
