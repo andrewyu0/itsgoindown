@@ -21,7 +21,13 @@ module.exports = function(passport){
 
 	router.get('/project', function(req, res){
 		res.render('project')
-	})
+	});
+
+	router.get('/create-project', function(req, res){
+		res.render('create-project')
+	});
+
+
 
 	/* Handle Login POST */
 	router.post('/login', passport.authenticate('login', {
