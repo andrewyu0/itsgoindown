@@ -14,10 +14,19 @@ var projectController = {
 
 		// New instance of Project 
 		var newProject = new Project(req.body);
-		newProject.save(function(err){
-			res.redirect('/');
+		
+		User.findById('565cd2ab0cc237897da7b49a', function(err, user){
+			newProject.user = user._id;
+			
+			console.log(newProject)
+
+			newProject.save(function(err){
+				res.redirect('/home');
+			});
+		
 		});
-		// 
+
+		
 	}
 }
 
