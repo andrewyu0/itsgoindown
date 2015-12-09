@@ -71,11 +71,29 @@ module.exports = function(passport){
 
 
 	/* Handle Login POST */
-	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/home',
-		failureRedirect: '/',
-		failureFlash : true  
-	}));
+	// router.post('/login', passport.authenticate('login', {
+	// 	successRedirect: '/home',
+	// 	failureRedirect: '/',
+	// 	failureFlash : true  
+	// }));
+
+	router.post('/login', function(req, res, next){
+		console.log('log in invoked')
+
+		passport.authenticate('login', function(err, account){
+			if(err){
+				// handle redirect
+				res.redirect('/')
+			}
+			console.log(account)
+			// res.redirect('http://google.com');
+			req.logIn(account, function(err){
+				if(err){return next(err);}
+				return res.redirect('/home/' + account._id)
+			})
+		})(req, res, next);
+	});
+
 
 	/* GET Registration Page */
 	router.get('/signup', function(req, res){
@@ -90,7 +108,8 @@ module.exports = function(passport){
 	}));
 
 	/* GET Home Page */
-	router.get('/home', isAuthenticated, function(req, res){
+	router.get('/home/:id', isAuthenticated, function(req, res){
+		console.log('GET home page route hit')
 		res.render('home', { user: req.user });
 	});
 
