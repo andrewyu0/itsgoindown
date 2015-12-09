@@ -1,6 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
+
+var projectController = {
+	create : function(req, res){
+		// create project
+		// save to DB
+		console.log("Create Project Post Route")
+		console.log(req.body)
+	}
+}
+
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
 	// Passport adds this method to request object. A middleware is allowed to add properties to
@@ -11,6 +23,8 @@ var isAuthenticated = function (req, res, next) {
 	res.redirect('/');
 }
 
+
+
 module.exports = function(passport){
 
 	/* GET login page. */
@@ -19,6 +33,8 @@ module.exports = function(passport){
 		res.render('index', { message: req.flash('message') });
 	});
 
+
+
 	router.get('/project', function(req, res){
 		res.render('project')
 	});
@@ -26,6 +42,8 @@ module.exports = function(passport){
 	router.get('/create-project', function(req, res){
 		res.render('create-project')
 	});
+
+	router.post('/create-project', projectController.create);
 
 
 
