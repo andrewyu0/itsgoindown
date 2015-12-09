@@ -3,13 +3,21 @@ var router = express.Router();
 
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var Project = mongoose.model('Project');
+
 
 var projectController = {
 	create : function(req, res){
-		// create project
-		// save to DB
+
 		console.log("Create Project Post Route")
 		console.log(req.body)
+
+		// New instance of Project 
+		var newProject = new Project(req.body);
+		newProject.save(function(err){
+			res.redirect('/');
+		});
+		// 
 	}
 }
 
