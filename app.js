@@ -1,16 +1,19 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('static-favicon');
-var logger = require('morgan');
+var express      = require('express');
+var path         = require('path');
+var favicon      = require('static-favicon');
+var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var bodyParser   = require('body-parser');
+
+
 
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
+
 // Connect to DB
 mongoose.connect(dbConfig.url);
-
 console.log(dbConfig.url)
+
 
 var app = express();
 
@@ -25,6 +28,7 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // Configuring Passport
 var passport = require('passport');
 var expressSession = require('express-session');
@@ -33,12 +37,19 @@ app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
  // Using the flash middleware provided by connect-flash to store messages in session
  // and displaying in templates
 var flash = require('connect-flash');
 app.use(flash());
 
+
+// require('./models/project.js')
+// require('./models/user.js')
+
+
 // Initialize Passport
+// Contains Model requirements
 var initPassport = require('./passport/init');
 initPassport(passport);
 
