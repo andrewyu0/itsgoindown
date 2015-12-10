@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-sm-12
+        #user
+          h1.text-center.login-title Create Project Page (should be a form)
+          .signup-wall
+            .row
+              .col-sm-12
+                h2 Create a project below
+                form(class='form-signin', action='/#{user._id}/create-project', method='POST')
+                  input(type='text', name='name', class='form-control', placeholder='Project Name',required, autofocus)  
+                  button.btn.btn-lg.btn-primary.btn-block.submit-btn() Create Project
+            .row
+              .col-sm-12
+                h3
+                  a(href='/#{user._id}/home') Home

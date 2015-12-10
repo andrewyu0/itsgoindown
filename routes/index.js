@@ -10,15 +10,13 @@ var projectController = {
 	create : function(req, res){
 
 		console.log("Create Project Post Route")
-		console.log(req.body)
 
 		// New instance of Project 
 		var newProject = new Project(req.body);
-		
-		console.log(newProject)
+		var userId     = req.params.userId;
 
 		// Find user
-		User.findById('565cd2ab0cc237897da7b49a', function(err, user){
+		User.findById(userId, function(err, user){
 			// Grab user id, set it to project user
 			newProject.user = user._id;
 			
@@ -28,7 +26,7 @@ var projectController = {
 				user.project = newProject._id;
 				user.save(function(err){
 					console.log(user)
-					res.redirect('/create-project');
+					res.redirect('/'+ userId + '/home');
 				})
 			});
 		
@@ -57,18 +55,23 @@ module.exports = function(passport){
 	});
 
 
+	router.get('/:projectId/project', function(req, res){
+		var projectId = req.params.projectId;
+		Project.findById(projectId, function(err, currentProject){
+			console.log(currentProject)
+			res.render('project', {
+				user: req.user,
+				project: currentProject
+			})
+		});
 
-	router.get('/project', function(req, res){
-		res.render('project')
 	});
 
-	router.get('/create-project', function(req, res){
-		res.render('create-project')
+	router.get('/:userId/create-project', function(req, res){
+		res.render('create-project', {user: req.user})
 	});
 
-	router.post('/create-project', projectController.create);
-
-
+	router.post('/:userId/create-project', projectController.create);
 
 	/* Handle Login POST */
 	// router.post('/login', passport.authenticate('login', {
@@ -89,7 +92,7 @@ module.exports = function(passport){
 			// res.redirect('http://google.com');
 			req.logIn(account, function(err){
 				if(err){return next(err);}
-				return res.redirect('/home/' + account._id)
+				return res.redirect( '/' + account._id + '/home')
 			})
 		})(req, res, next);
 	});
@@ -107,11 +110,26 @@ module.exports = function(passport){
 		failureFlash : true  
 	}));
 
+	
 	/* GET Home Page */
-	router.get('/home/:id', isAuthenticated, function(req, res){
-		console.log('GET home page route hit')
-		res.render('home', { user: req.user });
+	router.get('/:id/home', isAuthenticated, function(req, res){
+		console.log("GET Home ")
+		// Get project info here
+		// @TODO: When does req.user get set? 
+
+		console.log(req.user)
+		var currentUser = req.user;
+
+		Project.findById(req.user.project, function(err, userProject){
+			console.log(userProject)
+			res.render('home', { 
+				user: currentUser,
+				project: userProject
+			});
+		});
+
 	});
+
 
 	/* Handle Logout */
 	router.get('/signout', function(req, res) {

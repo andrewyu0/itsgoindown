@@ -35,18 +35,13 @@ block content
 					.signup-wall
 						.row
 							.col-sm-12
-								h2 PROJECT SECTION
-						.row
-							.col-sm-12
-								h2 ---- 1. Create Project
-						.row
-							.col-sm-12
-								h2 Create, Select your project here
+								h2 Create Project
 								h2
-									a(href="/create-project") Create Project
+									a(href="/#{user._id}/create-project") Create Project								
+					.signup-wall
 						.row
 							.col-sm-12
-								h2 ---- 2. Go to project
+								h2 Project Name: #{project.name}
 								h2
-									a(href="/project") Project
+									a(href="/#{project._id}/project") Project									
 					a(href='/signout', class='text-center new-account') Sign Out

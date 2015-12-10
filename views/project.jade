@@ -5,11 +5,8 @@ block content
     .row
       .col-sm-12
         #user
-          h1.text-center.login-title Project Page
+          h1.text-center.login-title #{project.name}
           .signup-wall
-            .row
-              .col-sm-12
-                h1 This is your project page
             .row
               .col-sm-12
                 h1 This is where you upload files               
@@ -19,4 +16,4 @@ block content
             .row
               .col-sm-12
                 h3
-                  a(href='/home') Home
+                  a(href='/#{user._id}/home') Home
