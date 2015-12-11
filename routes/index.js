@@ -7,6 +7,7 @@ var Project  = mongoose.model('Project');
 
 
 var projectController = {
+	
 	create : function(req, res){
 
 		console.log("Create Project Post Route")
@@ -32,6 +33,9 @@ var projectController = {
 		
 		});
 	}
+
+	// Upload file to the project
+
 }
 
 var isAuthenticated = function (req, res, next) {
@@ -43,7 +47,6 @@ var isAuthenticated = function (req, res, next) {
 	// if the user is not authenticated then redirect him to the login page
 	res.redirect('/');
 }
-
 
 
 module.exports = function(passport){
@@ -104,11 +107,27 @@ module.exports = function(passport){
 	});
 
 	/* Handle Registration POST */
-	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/home',
-		failureRedirect: '/signup',
-		failureFlash : true  
-	}));
+	// router.post('/signup', passport.authenticate('signup', {
+	// 	successRedirect: '/home',
+	// 	failureRedirect: '/signup',
+	// 	failureFlash : true  
+	// }));
+
+	router.post('/signup', function(req, res, next){
+		passport.authenticate('signup', function(err, account){
+
+			if(err){
+				res.redirect('/signup')
+			}
+			console.log("-------------------")
+			console.log(account)
+			req.logIn(account, function(err){
+				if(err){return next(err);}
+				return res.redirect( '/' + account._id + '/home')
+			})
+
+		})(req, res, next)
+	});
 
 	
 	/* GET Home Page */
@@ -116,18 +135,25 @@ module.exports = function(passport){
 		console.log("GET Home ")
 		// Get project info here
 		// @TODO: When does req.user get set? 
-
-		console.log(req.user)
 		var currentUser = req.user;
 
 		Project.findById(req.user.project, function(err, userProject){
-			console.log(userProject)
-			res.render('home', { 
-				user: currentUser,
-				project: userProject
-			});
-		});
+			
+			// First time user with no project
+			//@TODO: Ideally I'd like to hide the project cards. jQuery, Angular (not necessary)
+			if(userProject == null){
+				res.render('home-noproject', { 
+					user: currentUser
+				});				
+			}
+			else {
+				res.render('home', { 
+					user: currentUser,
+					project: userProject
+				});
+			}
 
+		});
 	});
 
 
