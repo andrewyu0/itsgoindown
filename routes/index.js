@@ -6,6 +6,8 @@ var User     = mongoose.model('User');
 var Project  = mongoose.model('Project');
 
 
+
+
 var projectController = {
 	
 	create : function(req, res){
@@ -50,6 +52,7 @@ var isAuthenticated = function (req, res, next) {
 
 
 module.exports = function(passport){
+
 
 	/* GET login page. */
 	router.get('/', function(req, res) {
