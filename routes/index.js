@@ -6,6 +6,9 @@ var User     = mongoose.model('User');
 var Project  = mongoose.model('Project');
 
 
+var fs = require('fs-extra');       //File System - for file manipulation
+var path = require("path");
+
 
 
 var projectController = {
@@ -51,7 +54,38 @@ var isAuthenticated = function (req, res, next) {
 }
 
 
+
+
+
 module.exports = function(passport){
+
+    router.post('/upload', function (req, res, next) {
+
+        var fstream;
+        req.pipe(req.busboy);
+
+        req.busboy.on('file', function (fieldname, file, filename) {
+            
+            console.log("Uploading: " + filename);
+
+            //Path where image will be uploaded
+            // fstream = fs.createWriteStream(__dirname + '/uploads/' + filename);
+            // console.log(__dirname)
+            
+            console.log(". = %s", path.resolve("."));
+						console.log("__dirname = %s", path.resolve(__dirname));
+
+            fstream = fs.createWriteStream('./public/uploads/' + filename);
+            
+
+            fstream.on('close', function () {    
+                console.log("Upload Finished of " + filename);              
+                res.redirect('back');           
+            });
+
+        });
+    });
+
 
 
 	/* GET login page. */

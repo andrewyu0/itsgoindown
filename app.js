@@ -5,6 +5,8 @@ var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 
+var busboy = require('connect-busboy'); //middleware for form/file upload
+var fs = require('fs-extra');       //File System - for file manipulation
 
 
 var dbConfig = require('./db');
@@ -18,6 +20,8 @@ console.log(dbConfig.url)
 var app = express();
 
 // view engine setup
+app.use(busboy());
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
