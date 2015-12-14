@@ -1,8 +1,11 @@
 var login = require('./login');
 var signup = require('./signup');
 
+
+// Load models
 var User = require('../models/user');
 var Project = require('../models/project');
+var Analysis = require('../models/analysis');
 
 module.exports = function(passport){
 

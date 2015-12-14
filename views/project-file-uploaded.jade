@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-sm-12
+        #user
+          h1.text-center.login-title #{project.name} 's file to analyze: #{project.uploadFileName}
+          .wall
+            .row
+              .col-sm-12
+                p File has been uploaded! Time to analyze:               
+                p Filename: #{project.uploadFileName}
+            .row
+              .col-sm-12
+                form(action='/#{project._id}/create-analysis' method='post')
+                  button(class='btn btn-lg btn-success btn-block submit-btn', type='submit') Analyze Me!
+          .wall 
+            .row
+              .col-sm-12
+                p Project Dashboard Here
+          .row
+            .col-sm-12
+              h3
+                a(href='/#{user._id}/home') Home

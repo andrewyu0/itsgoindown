@@ -4,7 +4,7 @@ var router  = express.Router();
 var mongoose = require('mongoose');
 var User     = mongoose.model('User');
 var Project  = mongoose.model('Project');
-
+var Analysis = mongoose.model('Analysis');
 
 var fs = require('fs-extra');       //File System - for file manipulation
 var path = require("path");
@@ -25,9 +25,7 @@ var projectController = {
 		User.findById(userId, function(err, user){
 			// Grab user id, set it to project user
 			newProject.user = user._id;
-			
 			newProject.save(function(err){
-				
 				// Save project on user and save user
 				user.project = newProject._id;
 				user.save(function(err){
@@ -55,36 +53,83 @@ var isAuthenticated = function (req, res, next) {
 
 
 
-
-
 module.exports = function(passport){
 
-    router.post('/upload', function (req, res, next) {
 
-        var fstream;
-        req.pipe(req.busboy);
+	// Create Analysis record
+	router.post('/:projectId/create-analysis', function(req, res){
+		console.log('---------- create analysis!')
+		// Find project 
+		var projectId = req.params.projectId;
+		var newAnalysisData = {};
+		Project.findById(projectId, function(err, project){
+			
+			newAnalysisData.name = project.uploadFileName;
+			newAnalysisData.project = projectId;
 
-        req.busboy.on('file', function (fieldname, file, filename) {
-            
-            console.log("Uploading: " + filename);
+			console.log("------------ create analysis record")
 
-            //Path where image will be uploaded
-            // fstream = fs.createWriteStream(__dirname + '/uploads/' + filename);
-            // console.log(__dirname)
-            
-            console.log(". = %s", path.resolve("."));
-						console.log("__dirname = %s", path.resolve(__dirname));
+			// Create the new analysis record, with content file upload content
+			var newAnalysis = new Analysis(newAnalysisData);
+			console.log("---------- Save analysis record")
+			newAnalysis.save(function(err){
+				// Push the latest analysis to the project analysisLog array
+				console.log("---------- push record into project analysis log array")
+				project.analysisLog.push(newAnalysis);
+				console.log("---------- pushed to the project")
+				// Save the project
+				project.save(function(err){
+					res.redirect('/' + projectId + '/project');
 
-            fstream = fs.createWriteStream('./public/uploads/' + filename);
-            
+					// res.redirect('/:projectId/project', {
+					// 	user: req.user,
+					// 	project: project
+					// });
+					// res.render('project', {
+					// 	user: req.user,
+					// 	project: project
+					// });
+				});
+			});
+		});
+	});
 
-            fstream.on('close', function () {    
-                console.log("Upload Finished of " + filename);              
-                res.redirect('back');           
-            });
+	// Upload file route 
 
-        });
-    });
+  router.post('/:projectId/upload', function (req, res, next) {
+
+  		var projectId = req.params.projectId;
+      var fstream;
+      req.pipe(req.busboy);
+
+      req.busboy.on('file', function (fieldname, file, filename) {
+          
+          console.log("Uploading: " + filename);
+
+          //Path where image will be uploaded
+          // fstream = fs.createWriteStream(__dirname + '/uploads/' + filename);
+          // console.log(__dirname)
+          
+          // console.log(". = %s", path.resolve("."));
+					// console.log("__dirname = %s", path.resolve(__dirname));
+
+          fstream = fs.createWriteStream('./public/uploads/' + filename);
+          file.pipe(fstream);
+          fstream.on('close', function () {    
+              console.log("Upload Finished of " + filename);              
+              Project.findById(projectId, function(err, project){
+								// Save filename to project
+								project.uploadFileName = filename;
+								project.save(function(err){
+									res.render('project-file-uploaded', {
+										user: req.user,
+										project:project
+									});
+								});
+              });
+          });          
+      });
+  });
 
 
 
@@ -96,13 +141,30 @@ module.exports = function(passport){
 
 
 	router.get('/:projectId/project', function(req, res){
+		
+		console.log("--------- project GET route hit ")
 		var projectId = req.params.projectId;
-		Project.findById(projectId, function(err, currentProject){
+		// Project.findById(projectId, function(err, currentProject){
+		// 	res.render('project', {
+		// 		user: req.user,
+		// 		project: currentProject
+		// 	})
+		// });
+		Project.findById(projectId)
+		.populate('analysisLog')
+		// .populate('analysisLog', 'name')
+		// .populate('analysisLog', 'created')
+		.exec(function(err, currentProject){
+
+			console.log("---------------------------")
+			console.log(currentProject.analysisLog[0].name)
 			console.log(currentProject)
+
+
 			res.render('project', {
 				user: req.user,
 				project: currentProject
-			})
+			});
 		});
 
 	});
