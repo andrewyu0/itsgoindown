@@ -156,11 +156,6 @@ module.exports = function(passport){
 		// .populate('analysisLog', 'created')
 		.exec(function(err, currentProject){
 
-			console.log("---------------------------")
-			console.log(currentProject.analysisLog[0].name)
-			console.log(currentProject)
-
-
 			res.render('project', {
 				user: req.user,
 				project: currentProject
