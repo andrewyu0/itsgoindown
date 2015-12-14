@@ -5,8 +5,8 @@ block content
 		.row
 			.col-sm-12
 				#user
-					h1.text-center.login-title Welcome #{user.firstName}. 
-					.signup-wall
+					h1.text-center.login-title Welcome, #{user.firstName}!
+					.wall
 						.row
 							.col-sm-6
 								h3 Username: 
@@ -32,16 +32,16 @@ block content
 								h3 Last Name: 
 							.col-sm-6
 								h3 #{user.username}				
-					.signup-wall
+					.wall.center
 						.row
 							.col-sm-12
 								h2 Create Project
-								h2
+								p
 									a(href="/#{user._id}/create-project") Create Project								
-					.signup-wall
+					.wall.center
 						.row
 							.col-sm-12
 								h2 Project Name: #{project.name}
-								h2
+								p
 									a(href="/#{project._id}/project") Project									
 					a(href='/signout', class='text-center new-account') Sign Out

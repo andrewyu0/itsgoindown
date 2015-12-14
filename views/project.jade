@@ -6,19 +6,24 @@ block content
       .col-sm-12
         #user
           h1.text-center.login-title #{project.name}
-          .signup-wall
+          .wall
             .row
               .col-sm-12
-                h1 This is where you upload files               
-            .row
-              .col-sm-12
-                h1 Project Dashboard Here
+                p This is where you upload files               
             .row
               .col-sm-12
                 form(action='/upload', method='post', enctype='multipart/form-data')
                   input(type='file' class='filestyle' name='fileUploaded' )
-                  input(type='submit' value='Upload File') 
+                  button(class='btn btn-lg btn-primary btn-block submit-btn', type='submit') Upload File
             .row
               .col-sm-12
-                h3
-                  a(href='/#{user._id}/home') Home
+                button(class='btn btn-lg btn-success btn-block submit-btn', type='submit') Analyze Me!
+
+          .wall 
+            .row
+              .col-sm-12
+                p Project Dashboard Here
+          .row
+            .col-sm-12
+              h3
+                a(href='/#{user._id}/home') Home
